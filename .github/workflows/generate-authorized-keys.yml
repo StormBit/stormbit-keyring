@@ -42,3 +42,9 @@ jobs:
               | @text
           ' \
           > authorized_keys
+      - uses: EndBug/add-and-commit@v5
+        with:
+          message: "Updating StormBit authorized_keys file"
+          add: "authorized_keys"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
