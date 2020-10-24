@@ -9,6 +9,9 @@ jobs:
   generate-authorized-keys:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
       - uses: octokit/graphql-action@v2.x
         id: fetch_github_team
         with:
@@ -43,9 +46,6 @@ jobs:
               | @text
           ' \
           > authorized_keys
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - name: "Commit updated authorized_keys"
         run: |
           git add authorized_keys
