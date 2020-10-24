@@ -21,7 +21,7 @@ jobs:
                       name
                       login
                       publicKeys(first:100) {
-            						nodes {
+                        nodes {
                           key
                         }
                       }
@@ -31,11 +31,13 @@ jobs:
               }
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: "echo '${{ steps.fetch_github_team.outputs.data }}'"
+          GITHUB_TOKEN: ${{ secrets.STORMBIT_KEYRING_GITHUB_TOKEN }}
+      - run: ""
       - run: |
-          jq '.data.organization.team.members.nodes[]
-            | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
-            | {name: .name, key: .keys[]}
-            | "\(.key) # \(.name)"
-            | @text'
+          echo '${{ steps.fetch_github_team.outputs.data }}'
+          | jq --raw-output '.data.organization.team.members.nodes[]
+              | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
+              | {name: .name, key: .keys[]}
+              | "\(.key) # \(.name)"
+              | @text'
+          > authorized_keys
