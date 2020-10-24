@@ -1,0 +1,41 @@
+name: Generate authorized keys
+on:
+  push:
+  schedule:
+    # Regenerate every 15 minutes
+    - cron: '*/15 * * * *'
+
+jobs:
+  generate-authorized-keys:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: octokit/graphql-action@v2.x
+        id: fetch_github_team
+        with:
+          query: |
+            query { 
+              organization(login:"stormbit") {
+                team(slug:"engineering") {
+                  members {
+                    nodes {
+                      name
+                      login
+                      publicKeys(first:100) {
+            						nodes {
+                          key
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo '${{ steps.fetch_github_team.outputs.data }}'"
+      - run: |
+        jq '.data.organization.team.members.nodes[]
+          | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
+          | {name: .name, key: .keys[]}
+          | "\(.key) # \(.name)"
+          | @text'
