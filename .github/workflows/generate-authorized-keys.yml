@@ -35,7 +35,7 @@ jobs:
       - run: |
           echo '${{ steps.fetch_github_team.outputs.data }}' \
           | jq --raw-output '
-            .data.organization.team.members.nodes[]
+            .organization.team.members.nodes[]
               | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
               | {name: .name, key: .keys[]}
               | "\(.key) # \(.name)"
