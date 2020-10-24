@@ -48,6 +48,8 @@ jobs:
           > authorized_keys
       - name: "Commit updated authorized_keys"
         run: |
+          git config --global user.email "developers@stormbit.net"
+          git config --global user.name "StormBit KeyFace"
           git add authorized_keys
           git commit -m "Updating authorized_keys"
           git push
