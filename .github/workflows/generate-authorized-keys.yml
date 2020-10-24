@@ -34,8 +34,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: "echo '${{ steps.fetch_github_team.outputs.data }}'"
       - run: |
-        jq '.data.organization.team.members.nodes[]
-          | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
-          | {name: .name, key: .keys[]}
-          | "\(.key) # \(.name)"
-          | @text'
+          jq '.data.organization.team.members.nodes[]
+            | {name: "\(.name) (\(.login))", keys: [.publicKeys.nodes[]?.key] }
+            | {name: .name, key: .keys[]}
+            | "\(.key) # \(.name)"
+            | @text'
