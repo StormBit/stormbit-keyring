@@ -46,6 +46,14 @@ jobs:
               | @text
           ' \
           > authorized_keys
+      - name: "Include archived keys keys"
+        run: |
+          echo "# Archived Keys (deprecated!)" >> authorized_keys
+          for f in keys/*; do
+            cat $f | while read line; do
+              echo "$line # Deprecated key from: $f" >> authorized_keys
+            done
+          done
       - name: "Commit updated authorized_keys"
         run: |
           git config --global user.email "developers@stormbit.net"
